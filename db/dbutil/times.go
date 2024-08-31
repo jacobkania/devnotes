@@ -7,5 +7,5 @@ func CurrentTimeUTCZ() string {
 }
 
 func TimeUTCZ(t time.Time) string {
-	return t.UTC().Format(time.RFC3339)
+	return t.Format(time.RFC3339)
 }

@@ -12,7 +12,6 @@ const (
 )
 
 // FindByCreatedDate retrieves all notes created on the specified date
-// TODO: Fix this so it handles timezones, since right now all times are converted to UTC but it should work with user's current time zone
 func FindNoteByCreatedDate(db *sql.DB, date time.Time) ([]model.Note, error) {
 	rows, err := db.Query(qFindNoteByCreatedDate, date.Format("2006-01-02"))
 	if err != nil {
