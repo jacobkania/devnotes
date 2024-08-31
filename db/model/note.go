@@ -2,7 +2,8 @@ package model
 
 import (
 	"database/sql"
-	"time"
+
+	"github.com/jacobkania/devnotes/db/dbutil"
 )
 
 type Note struct {
@@ -12,6 +13,7 @@ type Note struct {
 	UpdatedAt sql.NullTime
 }
 
+// Save inserts or updates the Note in the database
 func (n *Note) Save(db *sql.DB) error {
 	if n.ID == 0 {
 		return n.insert(db)
@@ -21,7 +23,7 @@ func (n *Note) Save(db *sql.DB) error {
 
 func (n *Note) insert(db *sql.DB) error {
 	stmt := `INSERT INTO notes (contents, created_at) VALUES (?, ?)`
-	result, err := db.Exec(stmt, n.Contents, time.Now())
+	result, err := db.Exec(stmt, n.Contents, dbutil.CurrentTimeUTCZ())
 	if err != nil {
 		return err
 	}
@@ -36,7 +38,11 @@ func (n *Note) insert(db *sql.DB) error {
 }
 
 func (n *Note) update(db *sql.DB) error {
-	stmt := `UPDATE notes SET (contents, updated_at) VALUES (?, ?) WHERE id = ?`
-	_, err := db.Exec(stmt, n.Contents, time.Now())
+	stmt := `UPDATE notes SET contents = ?, updated_at = ? WHERE id = ?`
+	_, err := db.Exec(stmt, n.Contents, dbutil.CurrentTimeUTCZ(), n.ID)
 	return err
+}
+
+func (n *Note) Scan(row *sql.Row) error {
+	return row.Scan(&n.ID, &n.Contents, &n.CreatedAt, &n.UpdatedAt)
 }

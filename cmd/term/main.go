@@ -33,13 +33,20 @@ func main() {
 	d := db.Init(cfg, migrate.MigrateFS)
 
 	if flagToday {
+		fmt.Println("Today's notes:")
+
+		err := actions.TodayNotes(d)
+		if err != nil {
+			fmt.Printf("DevNotes: Could not retrieve notes:\n%s\n", err)
+		}
 		return
 	}
 
 	if len(in) > 0 {
 		err = actions.QuickNote(d, in)
 		if err != nil {
-			fmt.Printf("Could not create note:\n%s\n", err)
+			fmt.Printf("DevNotes: Could not create note:\n%s\n", err)
+			return
 		}
 	}
 }
