@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	qFindNoteByCreatedDate = `SELECT id, contents, created_at, updated_at FROM notes WHERE DATE(created_at) = ?`
+	qFindNoteByCreatedDate = `SELECT id, contents, created_at, updated_at FROM notes WHERE DATE(created_at, 'localtime') = ?`
 )
 
 // FindByCreatedDate retrieves all notes created on the specified date
