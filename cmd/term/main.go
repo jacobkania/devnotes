@@ -15,10 +15,12 @@ func main() {
 	var flagToday bool
 	var flagStartWork bool
 	var flagEndWork bool
+	var flagTimesheetRange string
 
 	flag.BoolVar(&flagToday, "t", false, "print all notes from today")
 	flag.BoolVar(&flagStartWork, "s", false, "start tracking working hours")
 	flag.BoolVar(&flagEndWork, "e", false, "end tracking working hours")
+	flag.StringVar(&flagTimesheetRange, "w", "", "view timesheet for a given time range")
 
 	flag.Parse()
 	in := strings.Join(flag.Args(), " ")
@@ -53,7 +55,11 @@ func main() {
 		if err != nil {
 			fmt.Printf("DevNotes Error: Could not end work tracking: %s\n", err)
 		}
-		
+	} else if len(flagTimesheetRange) > 0 {
+		err = actions.TimeSheet(d, flagTimesheetRange)
+		if err != nil {
+			fmt.Printf("DevNotes Error: Could not retrieve timesheet: %s\n", err)
+		}
 	} else if len(in) > 0 {
 		err = actions.QuickNote(d, in)
 		if err != nil {
